@@ -271,6 +271,7 @@ if __name__ == '__main__':
         with open('final_2.txt', 'r', encoding='utf-8') as f:
             text = f.read()
             report = generate_comprehensive_report(text)
+            print(print_report(report))
 
             with open('artifacts.txt', 'w', encoding='utf-8') as out:
 
@@ -319,6 +320,7 @@ if __name__ == '__main__':
 
     except FileNotFoundError:
         print('File not found')
+
 
 
 
