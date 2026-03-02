@@ -126,7 +126,7 @@ def find_system_info(file):
     result = {'ips': [], 'files': [], 'emails': []}
 
     try:
-        with open(filename, 'r', encoding='utf-8') as f:
+        with open(file, 'r', encoding='utf-8') as f:
             text = f.read()
 
         email_regex = r'[\w.-]+@[\w.-]+\.\w+'
@@ -246,7 +246,7 @@ def find_and_validate_credit_cards(file):
 
     return {'cards': {'valid': valid_cards, 'invalid': invalid_cards}}
 
-def generate_comprehensive_report(main_text, log_text, messy_data):
+def generate_comprehensive_report(file):
     """ Генерирует полный отчет о расследовании """
     report = { 'financial_data': find_and_validate_credit_cards(file),
                'secrets': find_secrets(file),
@@ -264,6 +264,7 @@ if __name__ == '__main__':
     except FileNotFoundError:
         print('File not found')
         
+
 
 
 
