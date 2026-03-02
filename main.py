@@ -1,10 +1,8 @@
-
-import re
-import base64
-import codecs
+from typing import List, Dict
+import re, base64, codecs
 
 
-def decode_messages(file: str):
+def decode_messages(file: str) -> Dict[str, List[str]]:
     """
     Finds and decrypts messages
     Returns: {'base64': [], 'hex': [], 'rot13': []}
@@ -46,7 +44,7 @@ def decode_messages(file: str):
            }
 
 
-def normalize_and_validate(file: str):
+def normalize_and_validate(file: str) -> Dict[str, Dict[str, list]]:
     """ Brings the data to a single format and verifies it
         Returns:  { 'phones': {'valid': [], 'invalid': []},
                     'dates': {'normalized': [], 'invalid': []},
@@ -75,7 +73,6 @@ def normalize_and_validate(file: str):
         'inn': {'valid': valid_inn, 'invalid': invalid_inn},
         'cards': {'valid': valid_cards, 'invalid': invalid_cards}
            }
-
 
 def find_secrets(file: str):
     """
@@ -257,5 +254,6 @@ if __name__ == '__main__':
             print(generate_comprehensive_report(text))
     except FileNotFoundError:
         print('File not found')
+
 
 
