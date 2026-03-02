@@ -1,4 +1,4 @@
-import binascii
+
 import re
 import base64
 import codecs
@@ -257,4 +257,5 @@ if __name__ == '__main__':
             print(generate_comprehensive_report(text))
     except FileNotFoundError:
         print('File not found')
+
 
