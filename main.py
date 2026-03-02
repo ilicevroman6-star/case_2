@@ -260,6 +260,14 @@ def print_report(report):
     for title, data in sections:
         report_2 += f"\n{title}:\n"
         report_2 += "-" * 30 + "\n"
+        if isinstance(data, dict):
+            for key, value in data.items():
+                report_2 += f"  {key}: {value}\n"
+        elif isinstance(data, (list, tuple)):
+            for item in data:
+                report_2 += f"  {item}\n"
+        else:
+            report_2 += f"  {data}\n"
     return report_2
 
 
@@ -270,6 +278,7 @@ if __name__ == '__main__':
             print(generate_comprehensive_report(text))
     except FileNotFoundError:
         print('File not found')
+
 
 
 
