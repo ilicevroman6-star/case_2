@@ -1,5 +1,6 @@
 import re
 
+
 # Функция проверки номера карты по алгоритму Луна
 def luhn_check(card_number):
     clean_number = ''
@@ -19,6 +20,7 @@ def luhn_check(card_number):
         total += digit
     return total % 10 == 0
 
+
 # Функция поиска номеров карт в тексте
 def find_credit_cards(text):
     # Регулярное выражение ищет 16 цифр, сгруппированных по 4,
@@ -34,16 +36,21 @@ def find_credit_cards(text):
         clean_cards.append(clean_card)
     return clean_cards
 
+
 # Новая функция, которая возвращает словарь с валидными и невалидными картами
 def find_and_validate_credit_cards(text):
     cards = find_credit_cards(text)
-    result = {'valid': [], 'invalid': []}
+    valid_cards = []
+    invalid_cards = []
     for card in cards:
         if luhn_check(card):
-            result['valid'].append(card)
+            valid_cards.append(card)
         else:
-            result['invalid'].append(card)
-    return result
+            invalid_cards.append(card)
+    return {
+        'cards': {'valid': valid_cards, 'invalid': invalid_cards}
+    }
+
 
 def main():
     filename = 'кейс2.txt'
