@@ -1,6 +1,6 @@
 import re
 
-def find_and_validate_credit_cards(text):
+def find_and_validate_credit_cards(text: str):
     # Находит номера кредитных карт в тексте, проверяет их по алгоритму Луна
     # и возвращает словарь с валидными и невалидными картами.
 
