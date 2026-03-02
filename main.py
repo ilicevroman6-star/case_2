@@ -220,16 +220,16 @@ result2 = analyze_logs('example.txt')
 print(result1, result2, sep="\n")
 
 
-def find_and_validate_credit_cards(text: str):
-    # Находит номера кредитных карт в тексте, проверяет их по алгоритму Луна
-    # и возвращает словарь с валидными и невалидными картами.
+def find_and_validate_credit_cards(text):
+    # It finds credit card numbers in the text, checks them using the Luna algorithm,
+    # and returns a dictionary with valid and invalid cards.
 
-    # Регулярное выражение для поиска 16 цифр, сгруппированных по 4,
-    # между которыми могут быть пробелы или дефисы
+    # A regular expression for searching for 16 digits grouped into 4,
+    # with spaces or hyphens between them.
     pattern = r'\b\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4}\b'
     raw_matches = re.findall(pattern, text)
 
-    # Очистка найденных номеров от пробелов и дефисов
+    # Cleaning found numbers from spaces and hyphens.
     cards = []
     for card in raw_matches:
         clean_card = ''
@@ -238,12 +238,11 @@ def find_and_validate_credit_cards(text: str):
                 clean_card += ch
         cards.append(clean_card)
 
-    # Проверка по алгоритму Луна
+    # Verification using the Moon algorithm.
     valid_cards = []
     invalid_cards = []
 
     for card in cards:
-        # Алгоритм Луна
         if len(card) != 16:
             invalid_cards.append(card)
             continue
@@ -275,6 +274,7 @@ if __name__ == '__main__':
     except FileNotFoundError:
         print('File not found')
         
+
 
 
 
