@@ -77,7 +77,7 @@ def normalize_and_validate(text):
            }
 
 
-def secrets(file: str):
+def find_secrets(file: str):
     """
     Function, searches for API keys, passwords, and access tokens in a text file.
     :param file: filename (str): path to the file to analyze
@@ -284,6 +284,7 @@ if __name__ == '__main__':
     except FileNotFoundError:
         print('File not found')
         
+
 
 
 
