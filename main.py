@@ -74,34 +74,54 @@ def normalize_and_validate(file: str) -> Dict[str, Dict[str, list]]:
         'cards': {'valid': valid_cards, 'invalid': invalid_cards}
            }
 
-def find_secrets(file: str):
+
+def find_secrets(file):
     """
-    Function, searches for API keys, passwords, and access tokens in a text file.
-    :param file: filename (str): path to the file to analyze
-    :return: list: a list of found secrets (API keys)
-    """
+        Searches for API keys, passwords in a text file.
+
+        :param str file: path to the file to analyze
+        :return: list of found secrets (API keys)
+        """
 
     # Search keys.
     regex_keys = r'(?:sk|pk)_(?:live|test)_[A-Za-z0-9]{25,255}'
     keys = re.findall(regex_keys, file)
 
     # Search passwords.
-    regex_passwords = r'[A-Za-z0-9!@#$%^&*()_+=\-]{8,}'
-    maybe_passwords = re.findall(regex_passwords, file)
+    pattern_password = r'[A-Za-z\d\-!@#$%^&*()_+=|{}[\];\']{8,16}'
+    maybe_password = re.findall(pattern_password, file)
 
     passwords = []
-    for element in maybe_passwords:
-        # Check letters, numbers and special symbols.
-        if (re.search(r'[A-Za-z]', element) and
-                re.search(r'[0-9]', element) and
-                re.search(r'[!@#$%^&*()_+\-=]', element)):
+    for word in maybe_password:
+        # If word do not have letters, numbers and special symbols.
+        if not (re.search(r'[A-Za-z]', word) and
+                re.search(r'\d', word) and
+                re.search(r'[-!@#$%^&*()_+=|{}[\];\']', word)):
+            continue
 
-            # Excludes not passwords.
-            if (not re.search(r'\d{4}-\d{2}-\d{2}', element) and
-            not re.match(r'^(sk|pk|rk)_', element.lower()) and
-            element not in passwords):
-                passwords.append(element)
-    return keys, passwords
+        # Exclude date like DD-MM-YYYY, YYYY-MM-DD, DD-Mon-YYYY.
+        if re.search(r'\d{4}-\d{2}-\d{2}', word) or re.search(r'\d{2}-\d{2}-\d{4}', word):
+            continue
+        if re.search(r'\d{2}-[A-Za-z]{3}-\d{4}', word):
+            continue
+
+        # Exclude API-key (consist live/test or begin with sk/pk/rk).
+        if re.search(r'(live|test)[_-]', word.lower()):
+            continue
+        if re.match(r'^(sk|pk|rk)_', word.lower()):
+            continue
+
+        # Exclude URL, SQL, XSS.
+        if re.search(r'==', word) or re.search(r'alert|script|<|>', word):
+            continue
+
+        # Exclude word, which begin with dash or 'Ox'.
+        if word.startswith(('-', '0x')):
+            continue
+
+        passwords.append(word)
+
+    return keys, list(set(passwords))
 
 
 def find_system_info(file: str) -> Dict[str, Dict[str, list]]:
@@ -132,13 +152,17 @@ def find_system_info(file: str) -> Dict[str, Dict[str, list]]:
     result['files'] = re.findall(file_regex, text, re.IGNORECASE)
     
     return result
-    
+
+
 def analyze_logs(file):
     """
-    Function, searches for API keys, passwords, and access tokens in a text file.
-    :param file: file (str): path to the file to analyze
-    :return: list: a list of found secrets (API keys)
-    """
+        Analyze web server logs for security threats.
+
+        :param file: content of the log file as a string
+        :return: dictionary with keys 'sql_injections', 'xss_attacks',
+             'suspicious_user_agents', 'failed_logins'
+              """
+
     result = {
         'sql_injections': [],
         'xss_attacks': [],
@@ -146,22 +170,20 @@ def analyze_logs(file):
         'failed_logins': []
     }
 
-
-
     # Mask for SQL-injections.
-    sql_mask = r'OR\s+.*?=.*?|UNION\s+SELECT|DROP\s+TABLE|--|;\s*$'
+    sql_mask = r'(?:OR\s+.*?=.*?)|(?:UNION\s+SELECT)|(?:DROP\s+TABLE)|(?:--)|(?:;\s*$)'
 
     # Mask for XSS-attack.
-    xss_mask = r'<script.*?>.*?</script>|alert\s*\(|onerror\s*=|onload\s*='
+    xss_mask = r'(?:<script.*?>.*?</script>)|(?:alert\s*\()|(?:onerror\s*=)|(?:onload\s*=)'
 
     # Mask for suspicious User-Agents
-    agent_mask = r'sqlmap|nikto|evilot|evilbot'
+    agent_mask = r'(?:sqlmap)|(?:nikto)|(?:evilot)|(?:evilbot)'
 
     # Mask for failed logins.
-    login_mask = r'POST.*/login.*\s401|\s401\s|\s403\s'
+    login_mask = r'(?:POST.*/login.*\s401)|(?:\s401\s)|(?:\s403\s)'
 
     # Analysed every line
-    for line in text.split('\n'):
+    for line in file.split('\n'):
         line = line.strip()
         if not line:
             continue
@@ -320,6 +342,7 @@ if __name__ == '__main__':
 
     except FileNotFoundError:
         print('File not found')
+
 
 
 
