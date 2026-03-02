@@ -146,7 +146,7 @@ def find_system_info(file):
                 result['ips'].append(ip)
 
         file_regex = r'\b[\w.-]+\.(?:txt|log|ini|py|js)\b'
-        result['files'] = re.findall(file_regex, text, re.IGNORECASE)  # Флаг, игнорирующий регистр
+        result['files'] = re.findall(file_regex, text, re.IGNORECASE)
 
         return result
         
@@ -264,6 +264,7 @@ if __name__ == '__main__':
     except FileNotFoundError:
         print('File not found')
         
+
 
 
 
