@@ -1,0 +1,166 @@
+4532 8765 4321 3456
++7 916 123 45 67
+base64: dGhpcyBpcyBhIHRlc3QgbWVzc2FnZQ==
+15.03.2022
+771234567890
+5421-2233-4455-6677
+$gur dhvpx oebja sbk$
++7(495)987-65-43
+676-09-2024
+0x48656c6c6f20576f726c64
+4485 6789 4321 1234
+01/12/2023
+501522334455
++7 921 334-45-56
+base64: c2VjcmV0IGNvZGUgMTIz
+771234098765
+$lbh pna frr zr$
+31-01-2025
+5432 1111-2222-3333
+0x5468697320697320686578
++7 495 1112233
+15/08/21
+771122334455
+6011-1122-3344-5566
+base64: Y29uZmlkZW50aWFsIGRhdGE=
+$vf guvf ebg13?$
++7(926)777-88-99
+0x54657374696e6720313233
+4532 7654 3210 9876
+09.22.2023
+332211445566
++7 812 333 22 11
+base64: YW5vdGhlciBzdHJpbmc=
+7712 3456 7890
+$V qb yvxr guvf$
+01/01/2024
+3421-2345-6789-0123
+0x31323334353637383930
++7 499 888-77-66
+31.12.2025
+445566778899
+base64: cGxlYXNlIGVuY29kZSBtZQ==
+$abj vg'f zhpu pyrnere$
++7(905)234-56-78
+25-11-2026djjjjjjjjw     dccccccccccccc
+7712 1234 5678
+1234 5678-9012-3456
+15-мая-2023
+0x616263646566
++7 977 555-44-33
+base64: dGhpcyBpcyBiYXNlNjQgZnVu
+$rot13 vf pbby$
+7712 9988 7766
+6011-5566-7788-9900
+03/14/2024
++7 495 123 45 67
+0x444546474849 $nyy fhpprff$
+12.дек.2025
+4532-1122-3344-5566
+base64: bGFzdCBvbmUgaG9wZWZ1bGx5
++7(985)111-22-33
+771122334455
+31/12/23
+3456 7890-1234-5678
+0x464f5254455354
+$vatbar pbqr$
++7 343 222-11-00
+base64: ZmluYWwgbWVzc2FnZSBmb3Igbm93
+
+# Конфиденциальные данные
+- Номера карт: 2222-3333-4444-5555, 9999-8888-7777-6666
+- API-ключи: sk_test_abcdefghijklmnopqrstuvwxyz0123456789
+- Пароли: MySecret123!, Winter2025!
+- IP-адреса: 10.0.0.1, 192.168.0.100
+- Email: test.user@fakeemail.com
+- Закодированные сообщения:
+  Base64: U29tZSBoaWRkZW4gbWVzc2FnZQ==
+  Hex: 0x54657374
+  ROT13: Frperg zrffntr
+
+web_server_logs.txt
+# Примеры атак
+192.168.1.150 - "GET /search?q=<svg/onload=alert('XSS')>"
+203.0.113.77 - "GET /admin" 401 "EvilBot/2.0"
+10.0.0.88 - "GET /user?id=1' OR '1'='1' --"
+
+messy_data.txt
+Телефоны: +1 555 123 4567, 8-800-123-45-67
+Даты: 12/12/2024, 2024-12-12, 12-Dec-2024
+ИНН: 1231231230, 321321321321
+Карты: 2222-3333-4444-5555, 9999-8888-7777-6666
+
+
+data_leak_sample.txt
+# Конфиденциальные данные
+- Номера карт: 4532-4512-8795-2109, 4111-1111-1111-1111
+- API-ключи: live_1234567890abcdefghijklmnopqrstuv
+- Пароли: P@ssword!123, Summer2026?
+- IP-адреса: 172.16.1.1, 192.168.1.254
+- Email: secure@company.net
+- Закодированные сообщения:
+  Base64: QW5vdGhlciBzZWNyZXQgbWVzc2FnZQ==
+  Hex: 0x44617461
+  ROT13: Qrngu gb gur cnffjbeq
+
+web_server_logs.txt
+# Примеры атак
+192.168.1.50 - "GET /search?q=\"><script>alert(1)</script>"
+203.0.113.200 - "GET /admin" 403 "BadBot/1.0"
+10.0.0.150 - "GET /products?id=1; SELECT * FROM users --"
+
+messy_data.txt
+Телефоны: +44 20 7946 0958, 8-800-987-65-43
+Даты: 31.01.2025, 2025/01/31, 31-Jan-2025
+ИНН: 1112223334, 111222333444
+Карты: 5555-5555-5555-4444, 4012 8888 8888 1881
+
+
+data_leak_sample.txt
+# Конфиденциальные данные
+- Номера карт: 2222-3333-4444-5555, 9999-8888-7777-6666
+- API-ключи: sk_test_abcdefghijklmnopqrstuvwxyz0123456789
+- Пароли: MySecret123!, Winter2025!
+- IP-адреса: 10.0.0.1, 192.168.0.100
+- Email: test.user@fakeemail.com
+- Закодированные сообщения:
+  Base64: U29tZSBoaWRkZW4gbWVzc2FnZQ==
+  Hex: 0x54657374
+  ROT13: Frperg zrffntr
+
+web_server_logs.txt
+# Примеры атак
+192.168.1.150 - "GET /search?q=<svg/onload=alert('XSS')>"
+203.0.113.77 - "GET /admin" 401 "EvilBot/2.0"
+10.0.0.88 - "GET /user?id=1' OR '1'='1' --"
+
+messy_data.txt
+Телефоны: +1 555 123 4567, 8-800-123-45-67
+Даты: 12/12/2024, 2024-12-12, 12-Dec-2024
+ИНН: 1231231230, 321321321321
+Карты: 2222-3333-4444-5555, 9999-8888-7777-6666
+
+
+data_leak_sample.txt
+# Конфиденциальные данные
+- Номера карт: 4532-4512-8795-2109, 4111-1111-1111-1111
+- API-ключи: live_1234567890abcdefghijklmnopqrstuv
+- Пароли: P@ssword!123, Summer2026?
+- IP-адреса: 172.16.1.1, 192.168.1.254
+- Email: secure@company.net
+- Закодированные сообщения:
+  Base64: QW5vdGhlciBzZWNyZXQgbWVzc2FnZQ==
+  Hex: 0x44617461
+  ROT13: Qrngu gb gur cnffjbeq
+
+web_server_logs.txt
+# Примеры атак
+192.168.1.50 - "GET /search?q=\"><script>alert(1)</script>"
+203.0.113.200 - "GET /admin" 403 "BadBot/1.0"
+10.0.0.150 - "GET /products?id=1; SELECT * FROM users --"
+
+messy_data.txt
+Телефоны: +44 20 7946 0958, 8-800-987-65-43
+Даты: 31.01.2025, 2025/01/31, 31-Jan-2025
+ИНН: 1112223334, 111222333444
+Карты: 5555-5555-5555-4444, 4012 8888 8888 1881
