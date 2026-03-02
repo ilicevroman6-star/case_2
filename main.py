@@ -2,8 +2,6 @@ import re
 import base64
 import codecs
 
-with open('data_leak_sample.txt', 'r', encoding = 'utf-8') as f:
-    text = f.read()
 
 def decode_messages(file):
     """
@@ -11,47 +9,72 @@ def decode_messages(file):
     Returns: {'base64': [], 'hex': [], 'rot13': []}
     """
 
-    mask_1 = r'\b[A-Za-z0-9+/]+[=]{1,2}\b'
+    mask_1 = r'[A-Za-z0-9+/]+[=]{1,2}'
 
-    text_no_spaces = file.replace(' ', '')
-    base64_strings = re.findall(mask_1, text_no_spaces)
+    base64_strings = re.findall(mask_1, file)
     base64_decoded = []
 
     for message in base64_strings:
-        try:
-            base64message = base64.b64decode(message).decode('utf-8')
-            base64_decoded.append(base64message)
-        except TypeError:
-            print('Error decoding message')
+        base64message = base64.b64decode(message).decode('utf-8')
+        base64_decoded.append(base64message)
 
     mask_2 = r'0x[A-Fa-f0-9]+'
-    hex_strings = re.findall(mask_2, text_no_spaces)
+
+    hex_strings = re.findall(mask_2, file)
     hex_decoded = []
 
     for message in hex_strings:
-        try:
-            hex_message = codecs.decode(message[2:], 'hex').decode('utf-8')
-            hex_decoded.append(hex_message)
-        except TypeError:
-            print('Error decoding message')
+        hex_message = codecs.decode(message[2:], 'hex').decode('utf-8')
+        hex_decoded.append(hex_message)
 
-    mask_3 = r'\$[A-Za-z]+\$'
-    rot13_strings = re.findall(mask_3, text_no_spaces)
+    # \s - находит и сохраняет при декодировании все пробельные символы
+    mask_3 = r'\$[A-Za-z\s]+\$'
+
+    rot13_strings = re.findall(mask_3, file)
     rot13_decoded = []
 
     for message in rot13_strings:
-        try:
-            rot13_message = codecs.decode(message, 'rot13')
-            rot13_decoded.append(rot13_message.replace('$', ''))
-        except TypeError:
-            print('Error decoding message')
+        rot13_message = codecs.decode(message, 'rot13')
+        rot13_decoded.append(rot13_message.replace('$', ''))
 
-    return base64_decoded, hex_decoded, rot13_decoded
+    return {
+        'base64': base64_decoded,
+        'hex': hex_decoded,
+        'rot13': rot13_decoded
+           }
+
+
+def normalize_and_validate(text):
+    """ Brings the data to a single format and verifies it
+        Returns:  { 'phones': {'valid': [], 'invalid': []},
+                    'dates': {'normalized': [], 'invalid': []},
+                    'inn': {'valid': [], 'invalid': []},
+                    'cards': {'valid': [], 'invalid': []} } """
+    invalid_phones = []
+    pattern_1 = r'[+]?[78][- ]?\d{3}[- ]?\d{3}[- ]?\d{2}[- ]?\d{2}'
+
+    valid = re.findall(pattern_1, text)
 
 
 
-result = decode_messages(text)
-print(result)
+    invalid_dates = []
+    pattern_2 = r'(?:\d{2}[/.]\d{2}[/.]\d{2,4})|(?:\d{4}[/-]\d{2}[/-]\d{2})'
+    normalized = re.findall(pattern_2, text)
+
+    invalid_inn = []
+    pattern_3 = r'(?:\b\d{10}\b)|(?:\b\d{12}\b)'
+    valid_inn = re.findall(pattern_3, text)
+
+    invalid_cards = []
+    pattern_4 = r'\d{4}[ -]\d{4}[ -]\d{4}[ -]\d{4}'
+    valid_cards = set(re.findall(pattern_4, text))
+
+    return {
+        'phones': {'valid': valid, 'invalid': invalid_phones},
+        'dates': {'normalized': normalized, 'invalid': invalid_dates},
+        'inn': {'valid': valid_inn, 'invalid': invalid_inn},
+        'cards': {'valid': valid_cards, 'invalid': invalid_cards}
+           }
 
 
 def secrets(file: str):
@@ -154,5 +177,18 @@ def analyze_logs(file):
 result1 = secrets('example.txt')
 result2 = analyze_logs('example.txt')
 print(result1, result2, sep="\n")
+
+
+if __name__ == '__main__':
+    try:
+        with open('data_leak_sample_2.txt', 'r', encoding = 'utf-8') as f:
+            text = f.read()
+            result_1 = decode_messages(text)
+            result_2 = normalize_and_validate(text)
+            print(result_1)
+            print(result_2)
+    except FileNotFoundError:
+        print('File not found')
+
 
 
