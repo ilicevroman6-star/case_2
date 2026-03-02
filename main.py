@@ -262,7 +262,17 @@ def find_and_validate_credit_cards(text):
 
     return {'cards': {'valid': valid_cards, 'invalid': invalid_cards}}
 
-
+def generate_comprehensive_report(main_text, log_text, messy_data):
+    """ Генерирует полный отчет о расследовании """
+    report = { 'financial_data': result_1,
+               'secrets': result_2,
+               'system_info': result_3,
+               'encoded_messages': result_4,
+               'security_threats': result_5,
+               'normalized_data': result_6
+               }
+    return report
+    
 if __name__ == '__main__':
     try:
         with open('data_leak_sample_2.txt', 'r', encoding = 'utf-8') as f:
@@ -274,6 +284,7 @@ if __name__ == '__main__':
     except FileNotFoundError:
         print('File not found')
         
+
 
 
 
