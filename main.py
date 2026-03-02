@@ -105,8 +105,7 @@ def find_secrets(file: str):
 
 
 
-
-def find_system_info(file):
+def find_system_info(file: str) -> Dict[str, Dict[str, list]]:
     '''
     Searches for system information and returns:
      {'ips': [], 'files': [], 'emails': []}
@@ -254,6 +253,7 @@ if __name__ == '__main__':
             print(generate_comprehensive_report(text))
     except FileNotFoundError:
         print('File not found')
+
 
 
 
