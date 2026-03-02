@@ -245,6 +245,23 @@ def generate_comprehensive_report(file):
     return report
 
 
+def print_report(report):
+    """Красиво выводит отчет"""
+    report_2 = ""
+    report_2 += "=" * 50 + "\n"
+    report_2 += "ОТЧЕТ ОПЕРАЦИИ 'DATA SHIELD'\n"
+    report_2 += "=" * 50 + "\n"
+    sections = [("ФИНАНСОВЫЕ ДАННЫЕ", report['financial_data']),
+                ("СЕКРЕТНЫЕ КЛЮЧИ", report['secrets']),
+                ("СИСТЕМНАЯ ИНФОРМАЦИЯ", report['system_info']),
+                ("РАСШИФРОВАННЫЕ СООБЩЕНИЯ", report['encoded_messages']),
+                ("УГРОЗЫ БЕЗОПАСНОСТИ", report['security_threats']),
+                ("НОРМАЛИЗОВАННЫЕ ДАННЫЕ", report['normalized_data'])]
+    for title, data in sections:
+        report_2 += f"\n{title}:\n"
+        report_2 += "-" * 30 + "\n"
+    return report_2
+
 
 if __name__ == '__main__':
     try:
@@ -253,6 +270,7 @@ if __name__ == '__main__':
             print(generate_comprehensive_report(text))
     except FileNotFoundError:
         print('File not found')
+
 
 
 
