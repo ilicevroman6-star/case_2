@@ -44,7 +44,7 @@ def decode_messages(file):
            }
 
 
-def normalize_and_validate(text):
+def normalize_and_validate(file):
     """ Brings the data to a single format and verifies it
         Returns:  { 'phones': {'valid': [], 'invalid': []},
                     'dates': {'normalized': [], 'invalid': []},
@@ -53,21 +53,21 @@ def normalize_and_validate(text):
     invalid_phones = []
     pattern_1 = r'[+]?[78][- ]?\d{3}[- ]?\d{3}[- ]?\d{2}[- ]?\d{2}'
 
-    valid = re.findall(pattern_1, text)
+    valid = re.findall(pattern_1, file)
 
 
 
     invalid_dates = []
     pattern_2 = r'(?:\d{2}[/.]\d{2}[/.]\d{2,4})|(?:\d{4}[/-]\d{2}[/-]\d{2})'
-    normalized = re.findall(pattern_2, text)
+    normalized = re.findall(pattern_2, file)
 
     invalid_inn = []
     pattern_3 = r'(?:\b\d{10}\b)|(?:\b\d{12}\b)'
-    valid_inn = re.findall(pattern_3, text)
+    valid_inn = re.findall(pattern_3, file)
 
     invalid_cards = []
     pattern_4 = r'\d{4}[ -]\d{4}[ -]\d{4}[ -]\d{4}'
-    valid_cards = set(re.findall(pattern_4, text))
+    valid_cards = set(re.findall(pattern_4, file))
 
     return {
         'phones': {'valid': valid, 'invalid': invalid_phones},
@@ -117,7 +117,7 @@ def find_secrets(file: str):
 
 
 
-def find_system_info(filename):
+def find_system_info(file):
     '''
     Searches for system information and returns:
      {'ips': [], 'files': [], 'emails': []}
@@ -126,8 +126,8 @@ def find_system_info(filename):
     result = {'ips': [], 'files': [], 'emails': []}
 
     try:
-        with open(filename, 'r', encoding='utf-8') as file:
-            text = file.read()
+        with open(filename, 'r', encoding='utf-8') as f:
+            text = f.read()
 
         email_regex = r'[\w.-]+@[\w.-]+\.\w+'
         result['emails'] = re.findall(email_regex, text)
@@ -150,12 +150,6 @@ def find_system_info(filename):
 
         return result
         
-result_1 = find_email_ip_file('program.txt')
-print(result_1)
-
-
-
-
 
 def analyze_logs(file):
     """
@@ -170,64 +164,54 @@ def analyze_logs(file):
         'failed_logins': []
     }
 
-    try:
-        with open(file, 'r') as f:
-            text = f.read()
+    with open(file, 'r') as f:
+        text = f.read()
 
-        # Mask for SQL-injections.
-        sql_mask = r'OR\s+.*?=.*?|UNION\s+SELECT|DROP\s+TABLE|--|;\s*$'
+    # Mask for SQL-injections.
+    sql_mask = r'OR\s+.*?=.*?|UNION\s+SELECT|DROP\s+TABLE|--|;\s*$'
 
-        # Mask for XSS-attack.
-        xss_mask = r'<script.*?>.*?</script>|alert\s*\(|onerror\s*=|onload\s*='
+    # Mask for XSS-attack.
+    xss_mask = r'<script.*?>.*?</script>|alert\s*\(|onerror\s*=|onload\s*='
 
-        # Mask for suspicious User-Agents
-        agent_mask = r'sqlmap|nikto|evilot|evilbot'
+    # Mask for suspicious User-Agents
+    agent_mask = r'sqlmap|nikto|evilot|evilbot'
 
-        # Mask for failed logins.
-        login_mask = r'POST.*/login.*\s401|\s401\s|\s403\s'
+    # Mask for failed logins.
+    login_mask = r'POST.*/login.*\s401|\s401\s|\s403\s'
 
-        # Analysed every line
-        for line in text.split('\n'):
-            line = line.strip()
-            if not line:
-                continue
+    # Analysed every line
+    for line in text.split('\n'):
+        line = line.strip()
+        if not line:
+            continue
 
-            # Check the SQL-injections
-            if re.search(sql_mask, line, re.IGNORECASE):
-                result['sql_injections'].append(line)
+        # Check the SQL-injections
+        if re.search(sql_mask, line, re.IGNORECASE):
+            result['sql_injections'].append(line)
 
-            # Check XSS-attack
-            if re.search(xss_mask, line, re.IGNORECASE):
-                result['xss_attacks'].append(line)
+        # Check XSS-attack
+        if re.search(xss_mask, line, re.IGNORECASE):
+            result['xss_attacks'].append(line)
 
-            #  Check suspicious User-Agent
-            if re.search(agent_mask, line, re.IGNORECASE):
-                result['suspicious_user_agents'].append(line)
+        #  Check suspicious User-Agent
+        if re.search(agent_mask, line, re.IGNORECASE):
+            result['suspicious_user_agents'].append(line)
 
-            # Check failed logins
-            if re.search(login_mask, line, re.IGNORECASE):
-                result['failed_logins'].append(line)
+        # Check failed logins
+        if re.search(login_mask, line, re.IGNORECASE):
+            result['failed_logins'].append(line)
 
-        return result
-
-    except FileNotFoundError:
-        print(f"Error: file '{file}' not found")
-        return result
+    return result
 
 
-result1 = secrets('example.txt')
-result2 = analyze_logs('example.txt')
-print(result1, result2, sep="\n")
-
-
-def find_and_validate_credit_cards(text):
+def find_and_validate_credit_cards(file):
     # It finds credit card numbers in the text, checks them using the Luna algorithm,
     # and returns a dictionary with valid and invalid cards.
 
     # A regular expression for searching for 16 digits grouped into 4,
     # with spaces or hyphens between them.
     pattern = r'\b\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4}\b'
-    raw_matches = re.findall(pattern, text)
+    raw_matches = re.findall(pattern, file)
 
     # Cleaning found numbers from spaces and hyphens.
     cards = []
@@ -264,12 +248,12 @@ def find_and_validate_credit_cards(text):
 
 def generate_comprehensive_report(main_text, log_text, messy_data):
     """ Генерирует полный отчет о расследовании """
-    report = { 'financial_data': find_and_validate_credit_cards(main_text),
-               'secrets': find_secrets(main_text),
-               'system_info': find_system_info(main_text),
-               'encoded_messages': decode_messages(main_text),
-               'security_threats': analyze_logs(log_text),
-               'normalized_data': normalize_and_validate(messy_data)
+    report = { 'financial_data': find_and_validate_credit_cards(file),
+               'secrets': find_secrets(file),
+               'system_info': find_system_info(file),
+               'encoded_messages': decode_messages(file),
+               'security_threats': analyze_logs(file),
+               'normalized_data': normalize_and_validate(file)
                }
     return report
     
@@ -277,13 +261,10 @@ if __name__ == '__main__':
     try:
         with open('data_leak_sample_2.txt', 'r', encoding = 'utf-8') as f:
             text = f.read()
-            result_1 = decode_messages(text)
-            result_2 = normalize_and_validate(text)
-            print(result_1)
-            print(result_2)
     except FileNotFoundError:
         print('File not found')
         
+
 
 
 
