@@ -149,14 +149,7 @@ def find_email_ip_file(filename):
         result['files'] = re.findall(file_regex, text, re.IGNORECASE)  # Флаг, игнорирующий регистр
 
         return result
-
-    except FileNotFoundError:
-        print(f"Ошибка: Файл '{filename}' не найден")
-        return result
-    except Exception as e:
-        print(f"Ошибка: {e}")
-        return result
-
+        
 result_1 = find_email_ip_file('program.txt')
 print(result_1)
 
@@ -237,6 +230,8 @@ if __name__ == '__main__':
             print(result_2)
     except FileNotFoundError:
         print('File not found')
+        
+
 
 
 
