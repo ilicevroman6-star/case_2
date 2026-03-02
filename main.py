@@ -117,7 +117,7 @@ def secrets(file: str):
 
 
 
-def find_email_ip_file(filename):
+def find_system_info(filename):
     '''
     Searches for system information and returns:
      {'ips': [], 'files': [], 'emails': []}
@@ -284,6 +284,7 @@ if __name__ == '__main__':
     except FileNotFoundError:
         print('File not found')
         
+
 
 
 
