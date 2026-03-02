@@ -264,12 +264,12 @@ def find_and_validate_credit_cards(text):
 
 def generate_comprehensive_report(main_text, log_text, messy_data):
     """ Генерирует полный отчет о расследовании """
-    report = { 'financial_data': result_1,
-               'secrets': result_2,
-               'system_info': result_3,
-               'encoded_messages': result_4,
-               'security_threats': result_5,
-               'normalized_data': result_6
+    report = { 'financial_data': find_and_validate_credit_cards(main_text),
+               'secrets': find_secrets(main_text),
+               'system_info': find_system_info(main_text),
+               'encoded_messages': decode_messages(main_text),
+               'security_threats': analyze_logs(log_text),
+               'normalized_data': normalize_and_validate(messy_data)
                }
     return report
     
@@ -284,6 +284,7 @@ if __name__ == '__main__':
     except FileNotFoundError:
         print('File not found')
         
+
 
 
 
