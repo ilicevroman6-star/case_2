@@ -122,18 +122,17 @@ def find_system_info(file: str) -> Dict[str, Dict[str, list]]:
     ip_candidates = re.findall(ip_regex, text)
 
     for ip in ip_candidates:
-        number1, number2, number3, number4 = ip.split('.')
-        number1 = int(number1)
-        number2 = int(number2)
-        number3 = int(number3)
-        number4 = int(number4)
-        if (number1 <= 255 and number2 <= 255 and
-                    number3 <= 255 and number4 <= 255):
-            result['ips'].append(ip)
+    number1, number2, number3, number4 = ip.split('.')
+    number1 = int(number1)
+    number2 = int(number2)
+    number3 = int(number3)
+    number4 = int(number4)
+    if (number1 <= 255 and number2 <= 255 and
+                number3 <= 255 and number4 <= 255):
+        result['ips'].append(ip)
 
-        file_regex = r'\b[\w.-]+\.(?:txt|log|ini|py|js)\b'
-        result['files'] = re.findall(file_regex, text, re.IGNORECASE)  # Флаг, игнорирующий регистр
-
+file_regex = r'\b[\w.-]+\.(?:txt|log|ini|py|js)\b'
+result['files'] = re.findall(file_regex, text, re.IGNORECASE)
     return result
 
 
@@ -324,3 +323,4 @@ if __name__ == '__main__':
 
     except FileNotFoundError:
         print('File not found')
+
