@@ -104,7 +104,6 @@ def find_secrets(file: str):
     return keys, passwords
 
 
-
 def find_system_info(file: str) -> Dict[str, Dict[str, list]]:
     '''
     Searches for system information and returns:
@@ -113,8 +112,6 @@ def find_system_info(file: str) -> Dict[str, Dict[str, list]]:
 
     result = {'ips': [], 'files': [], 'emails': []}
 
-
-
     email_regex = r'[\w.-]+@[\w.-]+\.\w+'
     result['emails'] = re.findall(email_regex, text)
 
@@ -122,21 +119,20 @@ def find_system_info(file: str) -> Dict[str, Dict[str, list]]:
     ip_candidates = re.findall(ip_regex, text)
 
     for ip in ip_candidates:
-    number1, number2, number3, number4 = ip.split('.')
-    number1 = int(number1)
-    number2 = int(number2)
-    number3 = int(number3)
-    number4 = int(number4)
-    if (number1 <= 255 and number2 <= 255 and
+        number1, number2, number3, number4 = ip.split('.')
+        number1 = int(number1)
+        number2 = int(number2)
+        number3 = int(number3)
+        number4 = int(number4)
+        if (number1 <= 255 and number2 <= 255 and
                 number3 <= 255 and number4 <= 255):
-        result['ips'].append(ip)
+            result['ips'].append(ip)
 
-file_regex = r'\b[\w.-]+\.(?:txt|log|ini|py|js)\b'
-result['files'] = re.findall(file_regex, text, re.IGNORECASE)
+    file_regex = r'\b[\w.-]+\.(?:txt|log|ini|py|js)\b'
+    result['files'] = re.findall(file_regex, text, re.IGNORECASE)
+    
     return result
-
-
-
+    
 def analyze_logs(file):
     """
     Function, searches for API keys, passwords, and access tokens in a text file.
@@ -323,4 +319,5 @@ if __name__ == '__main__':
 
     except FileNotFoundError:
         print('File not found')
+
 
