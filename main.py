@@ -207,10 +207,11 @@ def analyze_logs(file):
     return result
 
 
-def find_and_validate_credit_cards(file):
-    # It finds credit card numbers in the text, checks them using the Luna algorithm,
-    # and returns a dictionary with valid and invalid cards.
-
+def find_and_validate_credit_cards(file: str) -> Dict[str, Dict[str, List[str]]]:
+    """
+    Finds credit card numbers and validates them using Luhn algorithm
+    Returns: {'cards': {'valid': [], 'invalid': []}}
+    """
     # A regular expression for searching for 16 digits grouped into 4,
     # with spaces or hyphens between them.
     pattern = r'\b\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4}\b'
@@ -342,6 +343,7 @@ if __name__ == '__main__':
 
     except FileNotFoundError:
         print('File not found')
+
 
 
 
