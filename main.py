@@ -50,30 +50,42 @@ def normalize_and_validate(file: str) -> Dict[str, Dict[str, list]]:
                     'dates': {'normalized': [], 'invalid': []},
                     'inn': {'valid': [], 'invalid': []},
                     'cards': {'valid': [], 'invalid': []} } """
-    invalid_phones = []
+
+    valid_phones = []
     pattern_1 = r'[+]?[78][- ]?\d{3}[- ]?\d{3}[- ]?\d{2}[- ]?\d{2}'
+    invalid_phones = re.findall(pattern_1, file)
 
-    valid = re.findall(pattern_1, file)
+    for phone in invalid_phones:
+        valid_phones.append(re.sub(r'\D', '', phone))
 
-    invalid_dates = []
-    pattern_2 = r'(?:\d{2}[/.]\d{2}[/.]\d{2,4})|(?:\d{4}[/-]\d{2}[/-]\d{2})'
-    normalized = re.findall(pattern_2, file)
+    for index in range(len(valid_phones)):
+        valid_phones[index] = ('+' + valid_phones[index][0] + '(' + valid_phones[index][1:4] + ')'
+                               + valid_phones[index][4:7] + '-'
+                               + valid_phones[index][7:9] + '-' + valid_phones[index][9:11])
 
-    invalid_inn = []
+    pattern_2 = r'(?:\d{2}[-/.]\d{2}[-/.]\d{2,4})|(?:\d{4}[/.-]\d{2}[/.-]\d{2})'
+    normalized_dates = invalid_dates = re.findall(pattern_2, file)
+
     pattern_3 = r'(?:\b\d{10}\b)|(?:\b\d{12}\b)'
-    valid_inn = re.findall(pattern_3, file)
+    valid_inn = invalid_inn = re.findall(pattern_3, file)
 
-    invalid_cards = []
+    valid_cards = []
     pattern_4 = r'\d{4}[ -]\d{4}[ -]\d{4}[ -]\d{4}'
-    valid_cards = set(re.findall(pattern_4, file))
+    invalid_cards = set(re.findall(pattern_4, file))
+
+    for card in invalid_cards:
+        valid_cards.append(re.sub(r'\D', '', card))
+
+    for index in range(len(valid_cards)):
+        valid_cards[index] = (valid_cards[index][:4] + '-' + valid_cards[index][4:8] + '-' +
+                              valid_cards[index][8:12] + '-' + valid_cards[index][12:16])
 
     return {
-        'phones': {'valid': valid, 'invalid': invalid_phones},
-        'dates': {'normalized': normalized, 'invalid': invalid_dates},
+        'phones': {'valid': valid_phones, 'invalid': invalid_phones},
+        'dates': {'normalized': normalized_dates, 'invalid': invalid_dates},
         'inn': {'valid': valid_inn, 'invalid': invalid_inn},
         'cards': {'valid': valid_cards, 'invalid': invalid_cards}
            }
-
 
 def find_secrets(file: str) -> Dict[str, List[str]]:
     """
@@ -345,6 +357,7 @@ if __name__ == '__main__':
 
     except FileNotFoundError:
         print('File not found')
+
 
 
 
