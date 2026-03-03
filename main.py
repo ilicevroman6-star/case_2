@@ -75,7 +75,7 @@ def normalize_and_validate(file: str) -> Dict[str, Dict[str, list]]:
            }
 
 
-def find_secrets(file):
+def find_secrets(file) -> Dict[str, List[str]]:
     """
         Searches for API keys, passwords in a text file.
 
@@ -121,7 +121,10 @@ def find_secrets(file):
 
         passwords.append(word)
 
-    return keys, list(set(passwords))
+    return {
+        'api_keys': keys,
+        'passwords': list(set(passwords))
+    }
 
 
 def find_system_info(file: str) -> Dict[str, Dict[str, list]]:
@@ -154,7 +157,7 @@ def find_system_info(file: str) -> Dict[str, Dict[str, list]]:
     return result
 
 
-def analyze_logs(file):
+def analyze_logs(file) -> Dict[str, List[str]]:
     """
         Analyze web server logs for security threats.
 
@@ -343,6 +346,7 @@ if __name__ == '__main__':
 
     except FileNotFoundError:
         print('File not found')
+
 
 
 
