@@ -157,7 +157,7 @@ def find_system_info(file: str) -> Dict[str, Dict[str, list]]:
     return result
 
 
-def analyze_logs(file) -> Dict[str, List[str]]:
+def analyze_logs(file: str) -> Dict[str, List[str]]:
     """
         Analyze web server logs for security threats.
 
@@ -255,7 +255,7 @@ def find_and_validate_credit_cards(file: str) -> Dict[str, Dict[str, List[str]]]
 
 
 def generate_comprehensive_report(file):
-    """ Генерирует полный отчет о расследовании """
+    """ Generates a comprehensive report """
     report = {'financial_data': find_and_validate_credit_cards(file),
               'secrets': find_secrets(file),
               'system_info': find_system_info(file),
@@ -267,7 +267,7 @@ def generate_comprehensive_report(file):
 
 
 def print_report(report):
-    """Красиво выводит отчет"""
+    """Outputs the beautiful report"""
     report_2 = ""
     report_2 += "=" * 50 + "\n"
     report_2 += "ОТЧЕТ ОПЕРАЦИИ 'DATA SHIELD'\n"
@@ -345,6 +345,7 @@ if __name__ == '__main__':
 
     except FileNotFoundError:
         print('File not found')
+
 
 
 
