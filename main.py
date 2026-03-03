@@ -306,10 +306,9 @@ if __name__ == '__main__':
                 for card in report['financial_data']['cards']['invalid']:
                     out.write(card + '\n')
 
-                keys, passwords = report['secrets']
-                for key in keys:
+                for key in report['secrets']['api_keys']:
                     out.write(key + '\n')
-                for pwd in passwords:
+                for pwd in report['secrets']['passwords']:
                     out.write(pwd + '\n')
 
                 for ip in report['system_info']['ips']:
@@ -346,6 +345,7 @@ if __name__ == '__main__':
 
     except FileNotFoundError:
         print('File not found')
+
 
 
 
