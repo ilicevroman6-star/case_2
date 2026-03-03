@@ -75,7 +75,7 @@ def normalize_and_validate(file: str) -> Dict[str, Dict[str, list]]:
            }
 
 
-def find_secrets(file) -> Dict[str, List[str]]:
+def find_secrets(file: str) -> Dict[str, List[str]]:
     """
         Searches for API keys, passwords in a text file.
 
@@ -345,6 +345,7 @@ if __name__ == '__main__':
 
     except FileNotFoundError:
         print('File not found')
+
 
 
 
