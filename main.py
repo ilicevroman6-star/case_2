@@ -275,6 +275,51 @@ def generate_comprehensive_report(file):
               'security_threats': analyze_logs(file),
               'normalized_data': normalize_and_validate(file)
               }
+
+        with open('artifacts.txt', 'w', encoding='utf-8') as out:
+
+        for card in report['financial_data']['cards']['valid']:
+            out.write(card + '\n')
+        for card in report['financial_data']['cards']['invalid']:
+            out.write(card + '\n')
+
+        for key in report['secrets']['api_keys']:
+            out.write(key + '\n')
+        for pwd in report['secrets']['passwords']:
+            out.write(pwd + '\n')
+
+        for ip in report['system_info']['ips']:
+            out.write(ip + '\n')
+        for email in report['system_info']['emails']:
+            out.write(email + '\n')
+        for file in report['system_info']['files']:
+            out.write(file + '\n')
+
+        for msg in report['encoded_messages']['base64']:
+            out.write(msg + '\n')
+        for msg in report['encoded_messages']['hex']:
+            out.write(msg + '\n')
+        for msg in report['encoded_messages']['rot13']:
+            out.write(msg + '\n')
+
+        for threat in report['security_threats']['sql_injections']:
+            out.write(threat + '\n')
+        for threat in report['security_threats']['xss_attacks']:
+            out.write(threat + '\n')
+        for threat in report['security_threats']['suspicious_user_agents']:
+            out.write(threat + '\n')
+        for threat in report['security_threats']['failed_logins']:
+            out.write(threat + '\n')
+
+        for phone in report['normalized_data']['phones']['valid']:
+            out.write(phone + '\n')
+        for date in report['normalized_data']['dates']['normalized']:
+            out.write(date + '\n')
+        for inn in report['normalized_data']['inn']['valid']:
+            out.write(inn + '\n')
+
+    print("Артефакты сохранены в файл artifacts.txt")
+    
     return report
 
 
@@ -306,57 +351,23 @@ def print_report(report):
 
 if __name__ == '__main__':
     try:
-        with open('final_2.txt', 'r', encoding='utf-8') as f:
-            text = f.read()
-            report = generate_comprehensive_report(text)
-            print(print_report(report))
+            with (open('final_2.txt', 'r', encoding='utf-8') as f2,
+                  open('final_1.txt', 'r', encoding='utf-8') as f1):
 
-            with open('artifacts.txt', 'w', encoding='utf-8') as out:
+            text = f2.read()
+            report_2 = generate_comprehensive_report(text)
+            text = f1.read()
+            report_1 = generate_comprehensive_report(text)
 
-                for card in report['financial_data']['cards']['valid']:
-                    out.write(card + '\n')
-                for card in report['financial_data']['cards']['invalid']:
-                    out.write(card + '\n')
 
-                for key in report['secrets']['api_keys']:
-                    out.write(key + '\n')
-                for pwd in report['secrets']['passwords']:
-                    out.write(pwd + '\n')
-
-                for ip in report['system_info']['ips']:
-                    out.write(ip + '\n')
-                for email in report['system_info']['emails']:
-                    out.write(email + '\n')
-                for file in report['system_info']['files']:
-                    out.write(file + '\n')
-
-                for msg in report['encoded_messages']['base64']:
-                    out.write(msg + '\n')
-                for msg in report['encoded_messages']['hex']:
-                    out.write(msg + '\n')
-                for msg in report['encoded_messages']['rot13']:
-                    out.write(msg + '\n')
-
-                for threat in report['security_threats']['sql_injections']:
-                    out.write(threat + '\n')
-                for threat in report['security_threats']['xss_attacks']:
-                    out.write(threat + '\n')
-                for threat in report['security_threats']['suspicious_user_agents']:
-                    out.write(threat + '\n')
-                for threat in report['security_threats']['failed_logins']:
-                    out.write(threat + '\n')
-
-                for phone in report['normalized_data']['phones']['valid']:
-                    out.write(phone + '\n')
-                for date in report['normalized_data']['dates']['normalized']:
-                    out.write(date + '\n')
-                for inn in report['normalized_data']['inn']['valid']:
-                    out.write(inn + '\n')
-
-            print("Артефакты сохранены в файл artifacts.txt")
+            print('ОТЧЁТ ПО ПЕРВОМУ ФАЙЛУ:')
+            print(print_report(report_2))
+            print('ОТЧЁТ ПО ВТОРОМУ ФАЙЛУ:')
+            print(print_report(report_1))
 
     except FileNotFoundError:
         print('File not found')
+
 
 
 
