@@ -400,19 +400,20 @@ if __name__ == '__main__':
             with (open('final_2.txt', 'r', encoding='utf-8') as f2,
                   open('final_1.txt', 'r', encoding='utf-8') as f1):
 
-            text = f2.read()
-            report_2 = generate_comprehensive_report(text)
-            text = f1.read()
-            report_1 = generate_comprehensive_report(text)
+                text = f2.read()
+                report_2 = generate_comprehensive_report(text)
+                text = f1.read()
+                report_1 = generate_comprehensive_report(text)
 
 
-            print('ОТЧЁТ ПО ПЕРВОМУ ФАЙЛУ:')
-            print(print_report(report_2))
-            print('ОТЧЁТ ПО ВТОРОМУ ФАЙЛУ:')
-            print(print_report(report_1))
+                print('ОТЧЁТ ПО ПЕРВОМУ ФАЙЛУ:')
+                print(print_report(report_2))
+                print('ОТЧЁТ ПО ВТОРОМУ ФАЙЛУ:')
+                print(print_report(report_1))
 
     except FileNotFoundError:
         print('File not found')
+
 
 
 
