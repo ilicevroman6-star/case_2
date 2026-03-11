@@ -322,7 +322,7 @@ def generate_comprehensive_report(file):
               'normalized_data': normalize_and_validate(file)
               }
 
-        with open('artifacts.txt', 'w', encoding='utf-8') as out:
+        with open('artifacts.txt', 'a', encoding='utf-8') as out:
 
             for card in report['financial_data']['cards']['valid']:
                 out.write(card + '\n')
@@ -413,6 +413,7 @@ if __name__ == '__main__':
 
     except FileNotFoundError:
         print('File not found')
+
 
 
 
