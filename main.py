@@ -322,7 +322,7 @@ def generate_comprehensive_report(file: str):
               'normalized_data': normalize_and_validate(file)
               }
 
-        with open('artifacts.txt', 'a', encoding='utf-8') as out:
+        with open('result_9.txt', 'a', encoding='utf-8') as out:
 
             for card in report['financial_data']['cards']['valid']:
                 out.write(card + '\n')
@@ -364,7 +364,7 @@ def generate_comprehensive_report(file: str):
             for inn in report['normalized_data']['inn']['valid']:
                 out.write(inn + '\n')
 
-        print("Артефакты сохранены в файл artifacts.txt")
+        print("Артефакты сохранены в файл result_9.txt")
     
         return report
 
@@ -397,22 +397,20 @@ def print_report(report: dict):
 
 if __name__ == '__main__':
     try:
-            with (open('final_2.txt', 'r', encoding='utf-8') as f2,
-                  open('final_1.txt', 'r', encoding='utf-8') as f1):
+            with open('final_2.txt', 'r', encoding='utf-8') as f2:
 
                 text = f2.read()
                 report_2 = generate_comprehensive_report(text)
-                text = f1.read()
-                report_1 = generate_comprehensive_report(text)
+                
 
 
                 print('ОТЧЁТ ПО ПЕРВОМУ ФАЙЛУ:')
                 print(print_report(report_2))
-                print('ОТЧЁТ ПО ВТОРОМУ ФАЙЛУ:')
-                print(print_report(report_1))
+                
 
     except FileNotFoundError:
         print('File not found')
+
 
 
 
