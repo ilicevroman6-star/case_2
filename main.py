@@ -312,7 +312,7 @@ def find_and_validate_credit_cards(
     return {'cards': {'valid': valid_cards, 'invalid': invalid_cards}}
 
 
-def generate_comprehensive_report(file):
+def generate_comprehensive_report(file: str):
     """ Generates a comprehensive report """
     report = {'financial_data': find_and_validate_credit_cards(file),
               'secrets': find_secrets(file),
@@ -369,7 +369,7 @@ def generate_comprehensive_report(file):
         return report
 
 
-def print_report(report):
+def print_report(report: dict):
     """Outputs the beautiful report"""
     report_2 = ""
     report_2 += "=" * 50 + "\n"
@@ -413,6 +413,7 @@ if __name__ == '__main__':
 
     except FileNotFoundError:
         print('File not found')
+
 
 
 
