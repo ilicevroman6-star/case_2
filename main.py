@@ -18,14 +18,15 @@ def decode_messages(file: str) -> Dict[str, List[str]]:
             base64message = base64.b64decode(message).decode('utf-8')
             base64_decoded.append(base64message)
 
-
     mask_2 = r'0x[A-Fa-f0-9]+'
 
     hex_strings = re.findall(mask_2, file)
     hex_decoded = []
 
     for message in hex_strings:
-        hex_message = codecs.decode(message[2:], 'hex').decode('utf-8')
+        hex_message = codecs.decode(
+            message[2:], 'hex'
+        ).decode('utf-8')
         hex_decoded.append(hex_message)
 
     mask_3 = r'\$[A-Za-z\s]+\$'
@@ -41,7 +42,7 @@ def decode_messages(file: str) -> Dict[str, List[str]]:
         'base64': base64_decoded,
         'hex': hex_decoded,
         'rot13': rot13_decoded
-           }
+    }
 
 
 def normalize_and_validate(file: str) -> Dict[str, Dict[str, list]]:
@@ -59,11 +60,18 @@ def normalize_and_validate(file: str) -> Dict[str, Dict[str, list]]:
         valid_phones.append(re.sub(r'\D', '', phone))
 
     for index in range(len(valid_phones)):
-        valid_phones[index] = ('+' + valid_phones[index][0] + '(' + valid_phones[index][1:4] + ')'
-                               + valid_phones[index][4:7] + '-'
-                               + valid_phones[index][7:9] + '-' + valid_phones[index][9:11])
+        valid_phones[index] = (
+                               '+' + valid_phones[index][0] + '(' +
+                               valid_phones[index][1:4] + ')' +
+                               valid_phones[index][4:7] + '-' +
+                               valid_phones[index][7:9] + '-' +
+                               valid_phones[index][9:11]
+                               )
 
-    pattern_2 = r'(?:\d{2}[-/.]\d{2}[-/.]\d{2,4})|(?:\d{4}[/.-]\d{2}[/.-]\d{2})'
+    pattern_2 = (
+        r'(?:\d{2}[-/.]\d{2}[-/.]\d{2,4})|'
+        r'(?:\d{4}[/.-]\d{2}[/.-]\d{2})'
+    )
     normalized_dates = invalid_dates = re.findall(pattern_2, file)
 
     pattern_3 = r'(?:\b\d{10}\b)|(?:\b\d{12}\b)'
@@ -77,15 +85,32 @@ def normalize_and_validate(file: str) -> Dict[str, Dict[str, list]]:
         valid_cards.append(re.sub(r'\D', '', card))
 
     for index in range(len(valid_cards)):
-        valid_cards[index] = (valid_cards[index][:4] + '-' + valid_cards[index][4:8] + '-' +
-                              valid_cards[index][8:12] + '-' + valid_cards[index][12:16])
+        valid_cards[index] = (
+                              valid_cards[index][:4] + '-' +
+                              valid_cards[index][4:8] + '-' +
+                              valid_cards[index][8:12] + '-' +
+                              valid_cards[index][12:16]
+                              )
 
     return {
-        'phones': {'valid': valid_phones, 'invalid': invalid_phones},
-        'dates': {'normalized': normalized_dates, 'invalid': invalid_dates},
+        'phones': {
+            'valid': valid_phones,
+            'invalid': invalid_phones
+        },
+
+        'dates': {
+            'normalized': normalized_dates,
+            'invalid': invalid_dates
+        },
+
         'inn': {'valid': valid_inn, 'invalid': invalid_inn},
-        'cards': {'valid': valid_cards, 'invalid': invalid_cards}
-           }
+
+        'cards': {
+            'valid': valid_cards,
+            'invalid': invalid_cards
+        }
+    }
+
 
 def find_secrets(file: str) -> Dict[str, List[str]]:
     """
@@ -106,13 +131,18 @@ def find_secrets(file: str) -> Dict[str, List[str]]:
     passwords = []
     for word in maybe_password:
         # If word do not have letters, numbers and special symbols.
-        if not (re.search(r'[A-Za-z]', word) and
+        if not (
+                re.search(r'[A-Za-z]', word) and
                 re.search(r'\d', word) and
-                re.search(r'[-!@#$%^&*()_+=|{}[\];\']', word)):
+                re.search(r'[-!@#$%^&*()_+=|{}[\];\']', word)
+        ):
             continue
 
         # Exclude date like DD-MM-YYYY, YYYY-MM-DD, DD-Mon-YYYY.
-        if re.search(r'\d{4}-\d{2}-\d{2}', word) or re.search(r'\d{2}-\d{2}-\d{4}', word):
+        if (
+            re.search(r'\d{4}-\d{2}-\d{2}', word)
+            or re.search(r'\d{2}-\d{2}-\d{4}', word)
+        ):
             continue
         if re.search(r'\d{2}-[A-Za-z]{3}-\d{4}', word):
             continue
@@ -124,7 +154,10 @@ def find_secrets(file: str) -> Dict[str, List[str]]:
             continue
 
         # Exclude URL, SQL, XSS.
-        if re.search(r'==', word) or re.search(r'alert|script|<|>', word):
+        if (
+            re.search(r'==', word)
+            or re.search(r'alert|script|<|>', word)
+        ):
             continue
 
         # Exclude word, which begin with dash or 'Ox'.
@@ -140,32 +173,32 @@ def find_secrets(file: str) -> Dict[str, List[str]]:
 
 
 def find_system_info(file: str) -> Dict[str, Dict[str, list]]:
-    '''
+    """
     Searches for system information and returns:
      {'ips': [], 'files': [], 'emails': []}
-    '''
+    """
 
     result = {'ips': [], 'files': [], 'emails': []}
 
     email_regex = r'[\w.-]+@[\w.-]+\.\w+'
-    result['emails'] = re.findall(email_regex, text)
+    result['emails'] = re.findall(email_regex, file)
 
     ip_regex = r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b'
-    ip_candidates = re.findall(ip_regex, text)
+    ip_candidates = re.findall(ip_regex, file)
 
     for ip in ip_candidates:
-            number1, number2, number3, number4 = ip.split('.')
-            number1 = int(number1)
-            number2 = int(number2)
-            number3 = int(number3)
-            number4 = int(number4)
-            if (number1 <= 255 and number2 <= 255 and
-                    number3 <= 255 and number4 <= 255):
-                result['ips'].append(ip)
+        number1, number2, number3, number4 = ip.split('.')
+        number1 = int(number1)
+        number2 = int(number2)
+        number3 = int(number3)
+        number4 = int(number4)
+        if (number1 <= 255 and number2 <= 255 and
+                number3 <= 255 and number4 <= 255):
+            result['ips'].append(ip)
 
     file_regex = r'\b[\w.-]+\.(?:txt|log|ini|py|js)\b'
-    result['files'] = re.findall(file_regex, text, re.IGNORECASE)
-    
+    result['files'] = re.findall(file_regex, file, re.IGNORECASE)
+
     return result
 
 
@@ -186,10 +219,21 @@ def analyze_logs(file: str) -> Dict[str, List[str]]:
     }
 
     # Mask for SQL-injections.
-    sql_mask = r'(?:OR\s+.*?=.*?)|(?:UNION\s+SELECT)|(?:DROP\s+TABLE)|(?:--)|(?:;\s*$)'
+    sql_mask = (
+        r'(?:OR\s+.*?=.*?)|'
+        r'(?:UNION\s+SELECT)|'
+        r'(?:DROP\s+TABLE)|'
+        r'(?:--)|'
+        r'(?:;\s*$)'
+    )
 
     # Mask for XSS-attack.
-    xss_mask = r'(?:<script.*?>.*?</script>)|(?:alert\s*\()|(?:onerror\s*=)|(?:onload\s*=)'
+    xss_mask = (
+        r'(?:<script.*?>.*?</script>)|'
+        r'(?:alert\s*\()|'
+        r'(?:onerror\s*=)|'
+        r'(?:onload\s*=)'
+    )
 
     # Mask for suspicious User-Agents
     agent_mask = r'(?:sqlmap)|(?:nikto)|(?:evilot)|(?:evilbot)'
@@ -222,7 +266,9 @@ def analyze_logs(file: str) -> Dict[str, List[str]]:
     return result
 
 
-def find_and_validate_credit_cards(file: str) -> Dict[str, Dict[str, List[str]]]:
+def find_and_validate_credit_cards(
+        file: str
+) -> Dict[str, Dict[str, List[str]]]:
     """
     Finds credit card numbers and validates them using Luhn algorithm
     Returns: {'cards': {'valid': [], 'invalid': []}}
@@ -367,6 +413,7 @@ if __name__ == '__main__':
 
     except FileNotFoundError:
         print('File not found')
+
 
 
 
